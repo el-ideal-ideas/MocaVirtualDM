@@ -1,0 +1,11 @@
+{
+  "admin_mail": "",
+  "smtp_server": {
+    "host": "",
+    "port": 465,
+    "user": "",
+    "password": "",
+    "ssl": true,
+    "from_address": ""
+  }
+}

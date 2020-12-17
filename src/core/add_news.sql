@@ -1,0 +1,1 @@
+insert into `[el]#moca_prefix#news` (news_type, title, detail, url, img_path, status) values (%s, %s, %s, %s, %s, true);

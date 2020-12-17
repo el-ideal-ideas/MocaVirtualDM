@@ -1,0 +1,1 @@
+insert into `[el]#moca_prefix#clients`(client_id, client_type, ip, time) values (%s, %s, %s, now());

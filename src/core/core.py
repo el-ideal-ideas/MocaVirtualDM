@@ -44,10 +44,19 @@ api_key_config: mzk.MocaSynchronizedJSONListFile = mzk.MocaSynchronizedJSONListF
 CLIENT_INIT_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('client_init.sql')).replace(
     '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
 )
+CLIENT_COUNT_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('client_count.sql')).replace(
+    '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
+)
 ADD_NEWS_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('add_news.sql')).replace(
     '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
 )
 GET_NEWS_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('get_news.sql')).replace(
+    '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
+)
+ADD_SLIDE_AD_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('add_slide_ad.sql')).replace(
+    '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
+)
+GET_SLIDE_AD_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('get_slide_ad.sql')).replace(
     '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
 )
 

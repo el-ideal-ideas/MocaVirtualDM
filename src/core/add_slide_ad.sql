@@ -1,0 +1,1 @@
+insert into `[el]#moca_prefix#slide_ad` (img_path, url, special, status) values (%s, %s, false, true);

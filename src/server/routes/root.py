@@ -10,6 +10,7 @@ from sanic.exceptions import Forbidden
 from pathlib import Path
 from ... import moca_modules as mzk
 from ... import core
+from .utils import check_root_pass
 
 # -------------------------------------------------------------------------- Imports --
 
@@ -35,6 +36,12 @@ async def init(request: Request) -> HTTPResponse:
         True
     )
     return text('success.')
+
+
+@root.route('/client-count', {'GET', 'POST', 'OPTIONS'})
+async def client_count(request: Request) -> HTTPResponse:
+    res = await request.app.mysql.execute_aio(core.CLIENT_COUNT_QUERY)
+    return text(res[0][0])
 
 
 @root.route('/configs', {'GET', 'POST', 'OPTIONS'})
@@ -74,18 +81,22 @@ async def add_news(request: Request) -> HTTPResponse:
         (news_type, title, detail, url, img_path),
         True
     )
-    await request.app.redis.delete('news-info')
+    await request.app.redis.delete('news-info-special')
+    await request.app.redis.delete('news-info-normal')
     return text('success.')
 
 
 @root.route('/get-news', {'GET', 'POST', 'OPTIONS'})
 async def get_news(request: Request) -> HTTPResponse:
-    res = await request.app.redis.get('news-info', None)
-    if res is not None:
-        return json(res)
+    special = await request.app.redis.get('news-info-special', None)
+    normal = await request.app.redis.get('news-info-normal', None)
+    if special is not None and normal is not None:
+        mzk.shuffle(normal)
+        special.extend(normal)
+        return json(special)
     res = await request.app.mysql.execute_aio(core.GET_NEWS_QUERY)
     special = []
-    data = []
+    normal = []
     if len(res) > 0 and len(res[0]) > 0:
         for id_, news_type, title, detail, url, img_path, special_flag in res:
             news_item = {
@@ -99,9 +110,69 @@ async def get_news(request: Request) -> HTTPResponse:
             if special_flag:
                 special.append(news_item)
             else:
-                data.append(news_item)
-    mzk.shuffle(data)
-    special.extend(data)
+                normal.append(news_item)
+    await request.app.redis.set('news-info-special', special)
+    await request.app.redis.set('news-info-normal', normal)
+    mzk.shuffle(normal)
+    special.extend(normal)
     return json(special)
+
+
+@root.route('/add-slide-ad', {'GET', 'POST', 'OPTIONS'})
+async def add_slide_ad(request: Request) -> HTTPResponse:
+    url, img_path = mzk.get_args(
+        request,
+        ('url', str, None, {'max_length': 1024}),
+        ('img_path', str, None, {'max_length': 1024}),
+    )
+    if img_path is None:
+        raise Forbidden('img_path parameter format error.')
+    await request.app.mysql.execute_aio(
+        core.ADD_SLIDE_AD_QUERY,
+        (img_path, url),
+        True
+    )
+    await request.app.redis.delete('slide-ad-special')
+    await request.app.redis.delete('slide-ad-normal')
+    return text('success.')
+
+
+@root.route('/get-slide-ad', {'GET', 'POST', 'OPTIONS'})
+async def get_slide_ad(request: Request) -> HTTPResponse:
+    special = await request.app.redis.get('slide-ad-special', None)
+    normal = await request.app.redis.get('slide-ad-normal', None)
+    if special is not None and normal is not None:
+        mzk.shuffle(normal)
+        special.extend(normal)
+        return json(special)
+    res = await request.app.mysql.execute_aio(core.GET_SLIDE_AD_QUERY)
+    special = []
+    normal = []
+    if len(res) > 0 and len(res[0]) > 0:
+        for id_, img_path, url, special_flag in res:
+            slide_ad = {
+                'id': id_,
+                'img_path': img_path,
+                'url': url
+            }
+            if special_flag:
+                special.append(slide_ad)
+            else:
+                normal.append(slide_ad)
+    await request.app.redis.set('slide-ad-special', special)
+    await request.app.redis.set('slide-ad-normal', normal)
+    mzk.shuffle(normal)
+    special.extend(normal)
+    return json(special)
+
+
+@root.route('/clear-cache', {'GET', 'POST', 'OPTIONS'})
+async def clear_cache(request: Request) -> HTTPResponse:
+    check_root_pass(request)
+    await request.app.redis.delete('slide-ad-special')
+    await request.app.redis.delete('slide-ad-normal')
+    await request.app.redis.delete('news-info-special')
+    await request.app.redis.delete('news-info-normal')
+    return text('success.')
 
 # -------------------------------------------------------------------------- Blueprint --

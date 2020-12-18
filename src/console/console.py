@@ -215,6 +215,7 @@ def __create_and_update_bots() -> None:
                 )
                 if res.status_code != 200:
                     mzk.tsecho(f'Send text to MocaBot API failed. <{screen_name}>', fg=mzk.tcolors.RED)
+                    mzk.tsecho(f'Status: {res.status_code}, Body: {res.text}', fg=mzk.tcolors.RED)
                     error_flag = True
                     break
             if not error_flag:

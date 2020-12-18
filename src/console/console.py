@@ -209,7 +209,7 @@ def __create_and_update_bots() -> None:
                     moca_api['url']['moca_bot'] + '/moca-bot/study',
                     json={
                         'api_key': moca_api['api_key']['moca_bot'],
-                        'screen_name': screen_name,
+                        'name': screen_name,
                         'message_list': message_list,
                     }
                 )

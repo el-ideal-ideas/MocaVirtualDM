@@ -4,11 +4,12 @@ from typing import (
     List
 )
 from sanic import Blueprint
+from .root import root
 
 # -------------------------------------------------------------------------- Imports --
 
 # -- Blueprints --------------------------------------------------------------------------
 
-blueprints: List[Blueprint] = []
+blueprints: List[Blueprint] = [root]
 
 # -------------------------------------------------------------------------- Blueprints --

@@ -61,6 +61,14 @@ async def add_news(request: Request) -> HTTPResponse:
         ('url', str, None, {'max_length': 1024}),
         ('img_path', str, None, {'max_length': 1024}),
     )
+    if news_type is None:
+        raise Forbidden('missing required parameter (news_type).')
+    elif news_type == 'simple-text':
+        if title is None or detail is None:
+            raise Forbidden('missing required parameter (title or detail).')
+    else:
+        if img_path is None:
+            raise Forbidden('missing required parameter (img_path).')
     await request.app.mysql.execute_aio(
         core.ADD_NEWS_QUERY,
         (news_type, title, detail, url, img_path),
@@ -72,7 +80,7 @@ async def add_news(request: Request) -> HTTPResponse:
 
 @root.route('/get-news', {'GET', 'POST', 'OPTIONS'})
 async def get_news(request: Request) -> HTTPResponse:
-    res = await request.app.redis.get('news-info', list, None)
+    res = await request.app.redis.get('news-info', None)
     if res is not None:
         return json(res)
     res = await request.app.mysql.execute_aio(core.GET_NEWS_QUERY)

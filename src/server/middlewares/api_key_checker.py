@@ -2,6 +2,7 @@
 
 from sanic.request import Request
 from sanic.exceptions import Forbidden, abort
+from sanic.response import text
 from limits import parse_many
 from asyncio import sleep
 from ... import moca_modules as mzk
@@ -13,9 +14,12 @@ from ... import moca_modules as mzk
 
 async def api_key_checker(request: Request):
     """A api-key filter."""
-    if not request.raw_url.startswith(b'/static') and \
+    if request.method.upper() == 'OPTIONS':
+        return text('success.')
+    elif not request.raw_url.startswith(b'/static') and \
             not request.raw_url.startswith(b'/web') and \
             not request.raw_url.startswith(b'/status') and \
+            not request.raw_url.startswith(b'/moca-virtual-dm/static') and \
             request.method.upper() != 'OPTIONS':
         received_key = mzk.get_args(request, ('api_key', str, None, {'max_length': 1024}))[0]
         ip = mzk.get_remote_address(request)

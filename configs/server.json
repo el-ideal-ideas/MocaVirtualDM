@@ -1,7 +1,7 @@
 {
   "address": {
     "host": "0.0.0.0",
-    "port": 5990,
+    "port": 5980,
     "unix": null,
     "use_ipv6": false
   },

@@ -76,17 +76,24 @@ async def get_news(request: Request) -> HTTPResponse:
     if res is not None:
         return json(res)
     res = await request.app.mysql.execute_aio(core.GET_NEWS_QUERY)
+    special = []
     data = []
     if len(res) > 0 and len(res[0]) > 0:
-        for id_, news_type, title, detail, url, img_path in res:
-            data.append({
+        for id_, news_type, title, detail, url, img_path, special in res:            
+            news_item = {
                 'id': id_,
                 'type': news_type,
                 'title': title,
                 'detail': detail,
                 'url': url,
                 'img_path': img_path,
-            })
-    return json(data)
+            }
+            if special:
+                special.append(news_item)
+            else:
+                data.append(news_item)
+    mzk.shuffle(data)
+    special.extend(data)
+    return json(special)
 
 # -------------------------------------------------------------------------- Blueprint --

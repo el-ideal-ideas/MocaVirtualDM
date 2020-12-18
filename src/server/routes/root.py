@@ -7,7 +7,6 @@ from orjson import dumps as orjson_dumps
 from functools import partial
 json = partial(original_json, dumps=orjson_dumps)
 from sanic.exceptions import Forbidden
-from pathlib import Path
 from ... import moca_modules as mzk
 from ... import core
 from .utils import check_root_pass

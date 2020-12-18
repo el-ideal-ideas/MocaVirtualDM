@@ -16,5 +16,15 @@
 
   },
   "dos_detect": 5000,
-  "root_pass": "mochimochi"
+  "root_pass": "mochimochi",
+  "moca_api": {
+    "api_key": {
+      "moca_twitter": "",
+      "moca_bot": ""
+    },
+    "url": {
+      "moca_twitter": "",
+      "moca_bot": ""
+    }
+  }
 }

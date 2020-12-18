@@ -2,6 +2,8 @@
 
 from sanic import __version__
 from sys import version_info
+from orjson import loads
+from requests import post
 from .. import moca_modules as mzk
 from .. import core
 
@@ -154,5 +156,72 @@ def clear_logs() -> None:
     """Clear log files."""
     mzk.call(f'rm -rf {core.LOG_DIR}/*', shell=True)
 
+
+@console.command('__create-and-update-bots')
+def __create_and_update_bots() -> None:
+    """Create and update bots, use screen_name_list.json"""
+    moca_api = core.system_config.get_config('moca_api')
+    moca_twitter_status = mzk.wcheck(moca_api['url']['moca_twitter'] + '/status')
+    moca_bot_status = mzk.wcheck(moca_api['url']['moca_bot'] + '/status')
+    mzk.tsecho(f'API Status: MocaTwitterUtil<{moca_twitter_status}>, MocaBot<{moca_bot_status}>')
+    if moca_twitter_status and moca_bot_status:
+        for screen_name in core.screen_name_list.list:
+            path = core.STORAGE_DIR.joinpath(screen_name + '-bot-data.json')
+            if path.is_file():
+                data = mzk.load_json_from_file(path)
+            else:
+                data = []
+            new = []
+            res = mzk.get_text_from_url(
+                moca_api['url']['moca_twitter'] + '/moca-twitter/get-latest-tweets',
+                headers={
+                    'API-KEY': moca_api['api_key']['moca_twitter'],
+                    'SCREEN-NAME': screen_name,
+                }
+            )
+            if res == '':
+                mzk.tsecho(f'Get latest tweets failed. <{screen_name}>', fg=mzk.tcolors.RED)
+                continue
+            else:
+                json_data = loads(res)
+                for item in json_data:
+                    if item[2].startswith('RT'):
+                        continue
+                    for text in item[2].split():
+                        if text.startswith('@'):
+                            continue
+                        elif text.startswith('#'):
+                            continue
+                        elif text.startswith('http'):
+                            continue
+                        elif len(text) < 3:
+                            continue
+                        elif text.isdigit():
+                            continue
+                        else:
+                            if text not in data:
+                                new.append(text)
+            error_flag = False
+            while len(new) > 0:
+                message_list = new[:8000]
+                new[:8000] = []
+                res = post(
+                    moca_api['url']['moca_bot'] + '/moca-bot/study',
+                    json={
+                        'api_key': moca_api['api_key']['moca_bot'],
+                        'screen_name': screen_name,
+                        'message_list': message_list,
+                    }
+                )
+                if res.status_code != 200:
+                    mzk.tsecho(f'Send text to MocaBot API failed. <{screen_name}>', fg=mzk.tcolors.RED)
+                    error_flag = True
+                    break
+            if not error_flag:
+                data.extend(new)
+                mzk.dump_json_to_file(data, path)
+                mzk.tsecho(f'Update bot successfully. <{screen_name}>', fg=mzk.tcolors.GREEN)
+    else:
+        mzk.tsecho(f'Please start MocaTwitterUtil and MocaBot api server.', fg=mzk.tcolors.RED)
 
 # -------------------------------------------------------------------------- Console --

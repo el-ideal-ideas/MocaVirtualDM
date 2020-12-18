@@ -15,7 +15,7 @@ from ... import core
 
 # -- Blueprint --------------------------------------------------------------------------
 
-root: Blueprint = Blueprint('root', '/')
+root: Blueprint = Blueprint('root', None)
 
 
 @root.route('/init', {'GET', 'POST', 'OPTIONS'})

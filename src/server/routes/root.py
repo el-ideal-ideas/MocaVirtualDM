@@ -87,7 +87,7 @@ async def get_news(request: Request) -> HTTPResponse:
     special = []
     data = []
     if len(res) > 0 and len(res[0]) > 0:
-        for id_, news_type, title, detail, url, img_path, special in res:            
+        for id_, news_type, title, detail, url, img_path, special_flag in res:
             news_item = {
                 'id': id_,
                 'type': news_type,
@@ -96,7 +96,7 @@ async def get_news(request: Request) -> HTTPResponse:
                 'url': url,
                 'img_path': img_path,
             }
-            if special:
+            if special_flag:
                 special.append(news_item)
             else:
                 data.append(news_item)

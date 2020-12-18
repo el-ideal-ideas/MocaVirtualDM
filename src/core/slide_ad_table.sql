@@ -1,4 +1,4 @@
-create table if not exists `%slide_ad` (
+create table if not exists `%sslide_ad` (
     id bigint auto_increment primary key,
     img_path varchar(4096) not null,
     url varchar(4096) default null,

@@ -175,4 +175,9 @@ async def clear_cache(request: Request) -> HTTPResponse:
     await request.app.redis.delete('news-info-normal')
     return text('success.')
 
+
+@root.route('/screen-name-list', {'GET', 'POST', 'OPTIONS'})
+async def screen_name_list(request: Request) -> HTTPResponse:
+    return json(request.app.screen_name_list.list)
+
 # -------------------------------------------------------------------------- Blueprint --

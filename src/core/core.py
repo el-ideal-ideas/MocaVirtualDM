@@ -31,6 +31,7 @@ DB_CONFIG: dict = mzk.load_json_from_file(CONFIG_DIR.joinpath('database.json'))
 MAIL_CONFIG: dict = mzk.load_json_from_file(CONFIG_DIR.joinpath('mail.json'))
 IP_BLACKLIST_FILE: Path = CONFIG_DIR.joinpath('ip_blacklist.json')
 API_KEY_FILE: Path = CONFIG_DIR.joinpath('api_key.json')
+SCREEN_NAME_LIST_FILE: Path = CONFIG_DIR.joinpath('screen_name_list.json')
 APP_CLIENT_CONFIG_FILE: Path = CONFIG_DIR.joinpath('app_client_config.json')
 WEB_CLIENT_CONFIG_FILE: Path = CONFIG_DIR.joinpath('web_client_config.json')
 system_config: mzk.MocaConfig = mzk.MocaConfig(SYSTEM_CONFIG, manual_reload=True)
@@ -39,6 +40,9 @@ ip_blacklist: mzk.MocaSynchronizedJSONListFile = mzk.MocaSynchronizedJSONListFil
 )
 api_key_config: mzk.MocaSynchronizedJSONListFile = mzk.MocaSynchronizedJSONListFile(
     API_KEY_FILE, manual_reload=True
+)
+screen_name_list: mzk.MocaSynchronizedJSONListFile = mzk.MocaSynchronizedJSONListFile(
+    SCREEN_NAME_LIST_FILE, manual_reload=True
 )
 
 CLIENT_INIT_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('client_init.sql')).replace(

@@ -99,6 +99,9 @@ async def before_server_start(app_: Sanic, loop):
     app_.web_client_config: mzk.MocaSynchronizedJSONDictFile = mzk.MocaSynchronizedJSONDictFile(
         core.WEB_CLIENT_CONFIG_FILE, manual_reload=True
     )
+    app_.screen_name_list: mzk.MocaSynchronizedJSONListFile = mzk.MocaSynchronizedJSONListFile(
+        core.SCREEN_NAME_LIST_FILE, manual_reload=True
+    )
     app_.dict_cache = {}
     app_.secure_log = mzk.MocaFileLog(core.LOG_DIR.joinpath('secure.log'))
     app_.scheduler = mzk.MocaScheduler()
@@ -116,6 +119,7 @@ async def before_server_start(app_: Sanic, loop):
             application.api_key_config.reload_file()
             application.app_client_config.reload_file()
             application.web_client_config.reload_file()
+            application.screen_name_list.reload_file()
 
     app_._timer_thread = Thread(target=__reload_timer, args=(app_,), daemon=True)
     app_._timer_thread.start()

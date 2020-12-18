@@ -25,6 +25,7 @@
     "url": {
       "moca_twitter": "",
       "moca_bot": ""
-    }
+    },
+    "moca_bot_root_pass": ""
   }
 }

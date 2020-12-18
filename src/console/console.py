@@ -211,6 +211,7 @@ def __create_and_update_bots() -> None:
                         'api_key': moca_api['api_key']['moca_bot'],
                         'name': screen_name,
                         'message_list': message_list,
+                        'root_pass': moca_api['moca_bot_root_pass'],
                     }
                 )
                 if res.status_code != 200:

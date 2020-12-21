@@ -179,4 +179,41 @@ async def clear_cache(request: Request) -> HTTPResponse:
 async def screen_name_list(request: Request) -> HTTPResponse:
     return json(request.app.screen_name_list.list)
 
+
+@root.route('/add-new-ai', {'GET', 'POST', 'OPTIONS'})
+async def add_new_ai(request: Request) -> HTTPResponse:
+    check_root_pass(request)
+    name, twitter, img, icon, bg, url, first_word, details, password = mzk.get_args(
+        request,
+        ('name', str, None, {'max_length': 16}),
+        ('twitter', str, None, {'max_length': 32}),
+        ('img', str, None, {'max_length': 4096}),
+        ('icon', str, None, {'max_length': 4096}),
+        ('bg', str, None, {'max_length': 4096}),
+        ('url', str, None, {'max_length': 4096}),
+        ('first_word', str, None, {'max_length': 64}),
+        ('details', str, None, {'max_length': 512}),
+        ('password', str, None, {'max_length': 16}),
+    )
+    if twitter is None:
+        raise Forbidden('twitter parameter format error.')
+    if password is None:
+        raise Forbidden('password parameter format error.')
+    await request.app.mysql.execute_aio(
+        core.ADD_AI_QUERY,
+        (name, twitter, img, icon, bg, url, first_word, details, password),
+        True,
+    )
+    await request.app.redis.delete('ai-info-list')
+    return text('success.')
+
+
+@root.route('/get-ai-info-list', {'GET', 'POST', 'OPTIONS'})
+async def get_ai_info_list(request: Request) -> HTTPResponse:
+    res = await request.app.redis.get('ai-info-list', None)
+    if res is None:
+        res = await request.app.mysql.execute_aio(core.GET_AI_INFO_QUERY)
+        await request.app.redis.set('ai-info-list', res)
+    return json(res)
+
 # -------------------------------------------------------------------------- Blueprint --

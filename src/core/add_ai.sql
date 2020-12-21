@@ -1,0 +1,1 @@
+insert into `[el]#moca_prefix#ai_list` (name, twitter, img, icon, bg, url, first_word, details, password) values (%s, %s, %s, %s, %s, %s, %s, %s, %s);

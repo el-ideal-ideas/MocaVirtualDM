@@ -63,5 +63,11 @@ ADD_SLIDE_AD_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('add_s
 GET_SLIDE_AD_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('get_slide_ad.sql')).replace(
     '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
 )
+ADD_AI_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('add_ai.sql')).replace(
+    '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
+)
+GET_AI_INFO_QUERY = mzk.get_str_from_file(Path(__file__).parent.joinpath('get_ai_info.sql')).replace(
+    '[el]#moca_prefix#', DB_CONFIG['mysql']['prefix']
+)
 
 # -------------------------------------------------------------------------- Variables --

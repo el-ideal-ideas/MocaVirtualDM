@@ -238,7 +238,7 @@ def __create_and_update_bots() -> None:
 
 
 @console.command('keep-bots-update')
-def keep_bot_update(interval: int):
+def keep_bot_update(interval: int) -> None:
     """Create and update bots, use screen_name_list.json"""
     mzk.set_process_name(f'MocaVirtualDM({core.VERSION}) -- keep-update-bots')
     while True:

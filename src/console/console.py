@@ -185,14 +185,14 @@ def __create_and_update_bots() -> None:
             else:
                 json_data = loads(res)
                 for item in json_data:
-                    if item[2].startswith('RT'):
+                    if 'RT' in item[2]:
                         continue
                     for text in item[2].split():
-                        if text.startswith('@'):
+                        if '@' in text:
                             continue
-                        elif text.startswith('#'):
+                        elif '#' in text:
                             continue
-                        elif text.startswith('http'):
+                        elif 'http' in text:
                             continue
                         elif len(text) < 3:
                             continue

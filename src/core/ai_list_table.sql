@@ -1,4 +1,4 @@
-create table if not exists `%ai_list` (
+create table if not exists `%sai_list` (
     id bigint auto_increment primary key,
     name varchar(64) default null,
     twitter varchar(128) not null,

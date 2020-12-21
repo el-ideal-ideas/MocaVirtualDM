@@ -214,6 +214,16 @@ async def get_ai_info_list(request: Request) -> HTTPResponse:
     if res is None:
         res = await request.app.mysql.execute_aio(core.GET_AI_INFO_QUERY)
         await request.app.redis.set('ai-info-list', res)
-    return json(res)
+    return json([{
+        'name': item[0],
+        'twitter': item[1],
+        'bot_name': item[0],
+        'img': item[2],
+        'icon': item[3],
+        'bg': item[4],
+        'url': item[5],
+        'first_word': item[6],
+        'details': item[7],
+    } for item in res])
 
 # -------------------------------------------------------------------------- Blueprint --

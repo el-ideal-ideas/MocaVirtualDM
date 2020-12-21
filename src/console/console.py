@@ -213,6 +213,7 @@ def __create_and_update_bots() -> None:
                 }
             )
             mzk.sleep(3)
+            data.extend(new)
             while len(new) > 0:
                 message_list = new[:8000]
                 new[:8000] = []
@@ -231,7 +232,6 @@ def __create_and_update_bots() -> None:
                     error_flag = True
                     break
             if not error_flag:
-                data.extend(new)
                 print(f'current-data: {len(data)}')
                 mzk.dump_json_to_file(data, path)
                 mzk.tsecho(f'Update bot successfully. <{screen_name}>', fg=mzk.tcolors.GREEN)

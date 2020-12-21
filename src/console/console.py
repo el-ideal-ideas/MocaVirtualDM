@@ -239,8 +239,8 @@ def __create_and_update_bots() -> None:
         mzk.tsecho(f'Please start MocaTwitterUtil and MocaBot api server.', fg=mzk.tcolors.RED)
 
 
-@console.command('keep-bots-update')
-def keep_bot_update(interval: int) -> None:
+@console.command('__keep-bots-update', hidden=True)
+def __keep_bots_update(interval: int) -> None:
     """Create and update bots, use screen_name_list.json"""
     mzk.set_process_name(f'MocaVirtualDM({core.VERSION}) -- keep-update-bots')
     while True:
@@ -249,5 +249,14 @@ def keep_bot_update(interval: int) -> None:
             shell=True
         )
         mzk.sleep(interval)
+
+
+@console.command('keep-bots-update')
+def keep_bots_update(interval: int) -> None:
+    """Create and update bots, use screen_name_list.json"""
+    mzk.call(
+        f'nohup {mzk.executable} "{core.TOP_DIR.joinpath("moca.py")}" __keep-bots-update {interval} &> /dev/null &',
+        shell=True
+    )
 
 # -------------------------------------------------------------------------- Console --

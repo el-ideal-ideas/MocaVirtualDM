@@ -171,6 +171,7 @@ def __create_and_update_bots() -> None:
                 data = mzk.load_json_from_file(path)
             else:
                 data = []
+            print(f'old-data: {len(data)}')
             new = []
             res = mzk.get_text_from_url(
                 moca_api['url']['moca_twitter'] + '/moca-twitter/get-latest-tweets',
@@ -231,6 +232,7 @@ def __create_and_update_bots() -> None:
                     break
             if not error_flag:
                 data.extend(new)
+                print(f'current-data: {len(data)}')
                 mzk.dump_json_to_file(data, path)
                 mzk.tsecho(f'Update bot successfully. <{screen_name}>', fg=mzk.tcolors.GREEN)
     else:

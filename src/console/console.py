@@ -202,6 +202,15 @@ def __create_and_update_bots() -> None:
                             if text not in data:
                                 new.append(text)
             error_flag = False
+            # if not exists create a new bot.
+            post(
+                moca_api['url']['moca_bot'] + '/moca-bot/create-bot',
+                json={
+                    'api_key': moca_api['api_key']['moca_bot'],
+                    'name': screen_name,
+                    'root_pass': moca_api['moca_bot_root_pass'],
+                }
+            )
             while len(new) > 0:
                 message_list = new[:8000]
                 new[:8000] = []

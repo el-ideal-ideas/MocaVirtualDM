@@ -157,7 +157,7 @@ def clear_logs() -> None:
     mzk.call(f'rm -rf {core.LOG_DIR}/*', shell=True)
 
 
-@console.command('__create-and-update-bots')
+@console.command('__create-and-update-bots', hidden=True)
 def __create_and_update_bots() -> None:
     """Create and update bots, use screen_name_list.json"""
     moca_api = core.system_config.get_config('moca_api')
@@ -234,5 +234,17 @@ def __create_and_update_bots() -> None:
                 mzk.tsecho(f'Update bot successfully. <{screen_name}>', fg=mzk.tcolors.GREEN)
     else:
         mzk.tsecho(f'Please start MocaTwitterUtil and MocaBot api server.', fg=mzk.tcolors.RED)
+
+
+@console.command('keep-bots-update')
+def keep_bot_update(interval: int):
+    """Create and update bots, use screen_name_list.json"""
+    mzk.set_process_name(f'MocaVirtualDM({core.VERSION}) -- keep-update-bots')
+    while True:
+        mzk.call(
+            f'nohup {mzk.executable} "{core.TOP_DIR.joinpath("moca.py")}" __create-and-update-bots &> /dev/null &',
+            shell=True
+        )
+        mzk.sleep(interval)
 
 # -------------------------------------------------------------------------- Console --

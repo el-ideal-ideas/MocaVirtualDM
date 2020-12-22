@@ -214,7 +214,7 @@ async def get_ai_info_list(request: Request) -> HTTPResponse:
     if res is None:
         res = await request.app.mysql.execute_aio(core.GET_AI_INFO_QUERY)
         await request.app.redis.set('ai-info-list', res)
-    return json([{
+    data = [{
         'name': item[0],
         'twitter': item[1],
         'bot_name': item[0],
@@ -224,6 +224,8 @@ async def get_ai_info_list(request: Request) -> HTTPResponse:
         'url': item[5],
         'first_word': item[6],
         'details': item[7],
-    } for item in res])
+    } for item in res]
+    mzk.shuffle(data)
+    return json(data)
 
 # -------------------------------------------------------------------------- Blueprint --

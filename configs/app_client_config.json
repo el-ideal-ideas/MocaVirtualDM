@@ -2,5 +2,6 @@
   "ai_db_ver": "1.0.0",
   "index": "",
   "default_bg": "",
+  "special_user_screen_name_list": [],
   "wait": 0
 }

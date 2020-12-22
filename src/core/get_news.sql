@@ -1,1 +1,1 @@
-select id, news_type, title, detail, url, img_path, special from `[el]#moca_prefix#news` where status = true;
+select SQL_NO_CACHE id, news_type, title, detail, url, img_path, special from `[el]#moca_prefix#news` where status = true;

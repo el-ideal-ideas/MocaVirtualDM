@@ -1,1 +1,1 @@
-select count(1) from `[el]#moca_prefix#clients`;
+select SQL_NO_CACHE count(1) from `[el]#moca_prefix#clients`;
